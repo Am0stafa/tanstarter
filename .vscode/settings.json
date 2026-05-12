@@ -35,6 +35,10 @@
   // enable oxlint + oxfmt
   "oxc.enable": true,
 
+  // format on save and paste
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": true,
+
   // set oxfmt as default formatter
   "editor.defaultFormatter": "oxc.oxc-vscode"
 }
