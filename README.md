@@ -10,7 +10,7 @@ pnpm create mugnavo
 
 - [React 19](https://react.dev) + [React Compiler](https://react.dev/learn/react-compiler)
 - TanStack [Start](https://tanstack.com/start/latest) + [Router](https://tanstack.com/router/latest) + [Query](https://tanstack.com/query/latest)
-- [Tailwind CSS](https://tailwindcss.com/) + [shadcn/ui](https://ui.shadcn.com/) + [Base UI](https://base-ui.com/) (base-luma, [`--preset b1aIaoaxs`](https://ui.shadcn.com/create?preset=b1aIaoaxs&base=base&template=start&pointer=true))
+- [Tailwind CSS](https://tailwindcss.com/) + [shadcn/ui](https://ui.shadcn.com/) + [Base UI](https://base-ui.com/) (base-rhea, [`--preset b1au68YWO`](https://ui.shadcn.com/create?preset=b1au68YWO&base=base&template=start&pointer=true))
 - [Vite 8](https://vite.dev) + [Nitro v3](https://nitro.build/)
 - [Drizzle ORM](https://orm.drizzle.team/) + PostgreSQL
 - [Better Auth](https://www.better-auth.com/)
@@ -62,11 +62,9 @@ Refer to the [TanStack Start hosting docs](https://tanstack.com/start/latest/doc
 
 ## Goodies
 
-#### Git hooks
+#### Upgrading dependencies
 
-We use [Husky](https://typicode.github.io/husky/) to run git hooks with the following tools:
-
-- [lint-staged](https://github.com/lint-staged/lint-staged) - Run Oxfmt to format staged files on commit (`pre-commit`).
+Dependency versions are pinned, so they may be slightly outdated when you create your project. To selectively upgrade packages, run `pnpm deps` or `pnx taze@latest -Ilw --maturity-period 3`.
 
 #### Scripts
 
@@ -92,3 +90,8 @@ Code in this template is public domain via [Unlicense](./LICENSE). Feel free to 
 - [@tanstack/intent](https://tanstack.com/intent/latest/docs/getting-started/quick-start-consumers) - Up-to-date skills for your AI agents, auto-synchronized from your installed dependencies.
 - [awesome-tanstack-start](https://github.com/Balastrong/awesome-tanstack-start) - A curated list of awesome resources for TanStack Start.
 - [shadcn/ui Directory](https://ui.shadcn.com/docs/directory), [MCP](https://ui.shadcn.com/docs/mcp), [shoogle.dev](https://shoogle.dev/) - Component directories & registries for shadcn/ui.
+
+## Related templates
+
+- [mugnavo/tanstarter-plus](https://github.com/mugnavo/tanstarter-plus) - A minimal monorepo version of this template, powered by Vite+ and pnpm workspaces.
+- [tsu-moe/tsu-stack](https://github.com/tsu-moe/tsu-stack) - An opinionated and batteries-included monorepo template from Luzefiru, built on tanstarter-plus, with Paraglide.js (i18n), Hono, oRPC, and more.
