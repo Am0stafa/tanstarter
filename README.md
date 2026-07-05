@@ -43,8 +43,8 @@ pnpm create mugnavo
 3. Generate the initial migration with drizzle-kit, then apply to your database:
 
    ```sh
-   pnpm db generate
-   pnpm db migrate
+   vpr db generate
+   vpr db migrate
    ```
 
    https://orm.drizzle.team/docs/migrations
@@ -52,7 +52,7 @@ pnpm create mugnavo
 4. Run the development server:
 
    ```bash
-   pnpm dev
+   vp dev
    ```
 
    The development server should now be running at [http://localhost:3000](http://localhost:3000).
@@ -78,16 +78,16 @@ Refer to the [TanStack Start hosting docs](https://tanstack.com/start/latest/doc
 
 #### Upgrading dependencies
 
-Dependency versions are pinned, so they may be slightly outdated when you create your project. To selectively upgrade packages, run `pnpm deps` or `vpx taze@latest -Ilw --maturity-period 3`.
+Dependency versions are pinned, so they may be slightly outdated when you create your project. To selectively upgrade packages, run `vpr deps` or `vpx taze@latest -Ilw --maturity-period 3`.
 
 #### Scripts
 
 We use **pnpm** by default, but you can modify the scripts in [package.json](./package.json) to use your preferred package manager.
 
 - **`auth:generate`** - Regenerate the [auth db schema](./src/lib/db/schema/auth.schema.ts) if you've made changes to your Better Auth [config](./src/lib/auth/auth.ts).
-- **`db`** - Run [drizzle-kit](https://orm.drizzle.team/docs/kit-overview) commands. (e.g. `pnpm db generate`, `pnpm db studio`)
-- **`ui`** - The shadcn/ui CLI. (e.g. `pnpm ui add button`)
-- **`format`**, **`lint`** - Run Oxfmt and Oxlint, or both via `pnpm check`.
+- **`db`** - Run [drizzle-kit](https://orm.drizzle.team/docs/kit-overview) commands. (e.g. `vpr db generate`, `vpr db studio`)
+- **`ui`** - The shadcn/ui CLI. (e.g. `vpr ui add button`)
+- **`format`**, **`lint`** - Run Oxfmt and Oxlint, or both via `vp check`.
 - **`deps`** - Selectively upgrade dependencies via taze.
 
 #### Utilities

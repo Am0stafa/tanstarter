@@ -1,11 +1,11 @@
 # Workflow
 
-## Build Commands
+## Commands
 
-- `pnpm build`: Only for build/bundler issues or verifying production output
-- `pnpm lint`: Covers both type-aware linting and type checking. No need to run `tsc --noEmit`
-- `pnpm dev` runs indefinitely in watch mode
-- `pnpm db` for Drizzle Kit commands (e.g. `pnpm db generate` to generate a migration)
+- `vp build`: Only for build/bundler issues or verifying production output
+- `vp lint`: Covers both type-aware linting and type checking. No need to run `tsc --noEmit`
+- `vp dev` runs indefinitely in watch mode
+- `vpr db` for Drizzle Kit commands (e.g. `vpr db generate` to generate a migration)
 
 Don't build after every change. If lint passes; assume changes work.
 
