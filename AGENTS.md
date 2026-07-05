@@ -5,7 +5,8 @@
 - Stack: TypeScript + React (TanStack Start), with Drizzle ORM, shadcn/ui, and Better Auth.
 - Use shadcn CLI (`vpr ui add <component>`) for adding new UI components & primitives.
 - Use `lucide-react` for UI icons (use `Icon` suffix, e.g. `import { Loader2Icon } from "lucide-react"`); for brand icons use `@icons-pack/react-simple-icons` (e.g. `SiGithub`).
-- Don't build after every little change. If `vp lint` passes; assume changes work.
+- Don't build after every little change. If `vpr lint` passes; assume changes work.
+- For running scripts, use `vpr`, which is a shorthand for `vp run`.
 
 ## Topic-specific Guidelines
 

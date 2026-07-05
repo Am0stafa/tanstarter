@@ -52,7 +52,7 @@ pnpm create mugnavo
 4. Run the development server:
 
    ```bash
-   vp dev
+   vpr dev
    ```
 
    The development server should now be running at [http://localhost:3000](http://localhost:3000).
@@ -87,7 +87,7 @@ We use **pnpm** by default, but you can modify the scripts in [package.json](./p
 - **`auth:generate`** - Regenerate the [auth db schema](./src/lib/db/schema/auth.schema.ts) if you've made changes to your Better Auth [config](./src/lib/auth/auth.ts).
 - **`db`** - Run [drizzle-kit](https://orm.drizzle.team/docs/kit-overview) commands. (e.g. `vpr db generate`, `vpr db studio`)
 - **`ui`** - The shadcn/ui CLI. (e.g. `vpr ui add button`)
-- **`format`**, **`lint`** - Run Oxfmt and Oxlint, or both via `vp check`.
+- **`format`**, **`lint`** - Run Oxfmt and Oxlint, or both via `vpr check`.
 - **`deps`** - Selectively upgrade dependencies via taze.
 
 #### Utilities
