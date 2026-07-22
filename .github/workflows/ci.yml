@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    env:
+      # Dummy values so t3-env validation passes for build/typecheck.
+      # Real secrets are never needed in CI — nothing here talks to a database.
+      DATABASE_URL: postgresql://postgres:password@localhost:5432/tanstarter
+      BETTER_AUTH_SECRET: ci-only-dummy-secret
+    steps:
+      - uses: actions/checkout@v4
+
+      # Reads the pinned version from package.json "packageManager"
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Format, lint & typecheck
+        run: pnpm run check
+
+      - name: Test
+        run: pnpm run test
+
+      - name: Build
+        run: pnpm run build

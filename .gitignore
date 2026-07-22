@@ -22,3 +22,6 @@ dist
 /public/build
 
 .tanstack
+# Local tooling artifacts
+.pnpm-store/
+.claude/
