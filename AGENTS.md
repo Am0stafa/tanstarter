@@ -3,6 +3,7 @@
 ## Essentials
 
 - Stack: TypeScript + React (TanStack Start), with Drizzle ORM, shadcn/ui, and Better Auth.
+- UI always follows the **Supabase-style design system** — read [.agents/design.md](.agents/design.md) before any UI work. Semantic theme tokens only; never hardcode colors.
 - Use shadcn CLI (`vpr ui add <component>`) for adding new UI components & primitives.
 - Use `lucide-react` for UI icons (use `Icon` suffix, e.g. `import { Loader2Icon } from "lucide-react"`); for brand icons use `@icons-pack/react-simple-icons` (e.g. `SiGithub`).
 - Don't build after every little change. If `vpr lint` passes; assume changes work.
@@ -10,6 +11,7 @@
 
 ## Topic-specific Guidelines
 
+- [UI design system](.agents/design.md) - Supabase-style theme, design tokens, component & styling rules
 - [TanStack patterns](.agents/tanstack-patterns.md) - Routing, data fetching, loaders, server functions, environment shaking
 - [Auth patterns](.agents/auth.md) - Route guards, middleware, auth utilities
 - [TypeScript conventions](.agents/typescript.md) - Casting rules, prefer type inference
