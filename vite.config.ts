@@ -132,7 +132,15 @@ export default defineConfig({
       // https://tanstack.com/devtools/latest/docs/vite-plugin#console-piping
       consolePiping: { enabled: false },
     }),
-    tanstackStart(),
+    tanstackStart({
+      // Bake the public landing page to static HTML at build time — served
+      // from disk/CDN with zero SSR work. Auth-dependent header state hydrates
+      // client-side (useAuth is non-blocking), so no database is touched.
+      // crawlLinks stays off: crawling would also bake /login, /signup, and
+      // even /app (as its login redirect), shadowing their live SSR responses.
+      // Add marketing/docs pages here as they appear; app routes stay dynamic.
+      pages: [{ path: "/", prerender: { enabled: true, crawlLinks: false } }],
+    }),
     // https://tanstack.com/start/latest/docs/framework/react/guide/hosting
     nitro(),
     viteReact(),
