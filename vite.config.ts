@@ -111,6 +111,12 @@ export default defineConfig({
     ],
   },
 
+  // Vitest (via `vp test`) - https://viteplus.dev/config/test
+  test: {
+    include: ["src/**/*.test.ts"],
+    environment: "node",
+  },
+
   // Vite config - https://vite.dev/config/
   define: {
     __APP_VERSION__: JSON.stringify(version),
