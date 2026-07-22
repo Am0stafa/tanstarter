@@ -18,6 +18,10 @@ const dateFormatter = new Intl.DateTimeFormat("en-US", {
   month: "short",
   day: "numeric",
   year: "numeric",
+  // Date-only ISO strings parse as UTC midnight; formatting in local time
+  // would shift them a day back in UTC-negative timezones (and cause
+  // SSR/client hydration mismatches). Format in UTC to stay deterministic.
+  timeZone: "UTC",
 });
 
 /** $1,234 — whole-dollar USD, used for MRR and revenue figures. */

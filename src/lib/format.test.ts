@@ -18,8 +18,9 @@ describe("formatCompact", () => {
 });
 
 describe("formatDate", () => {
-  it("formats ISO strings", () => {
-    expect(formatDate("2026-01-05T00:00:00.000Z")).toMatch(/Jan [45], 2026/);
+  it("formats ISO strings deterministically in UTC regardless of local timezone", () => {
+    expect(formatDate("2026-01-05T00:00:00.000Z")).toBe("Jan 5, 2026");
+    expect(formatDate("2025-01-14")).toBe("Jan 14, 2025");
   });
 
   it("returns a placeholder for invalid dates instead of throwing", () => {

@@ -24,7 +24,7 @@ A batteries-included, AI-agent-friendly starter for building products on 🏝️
 - 📋 **Data tables** — TanStack Table, server-driven filter/sort/pagination with state in the URL ([customers](src/routes/_auth/app/customers.tsx))
 - 🔗 **Type-safe URL state** — zod-validated search params with graceful fallbacks (`validateSearch` + `stripSearchParams`)
 - 📝 **Forms** — TanStack Form + Zod with a reusable shadcn field kit ([form.tsx](src/components/form.tsx), [settings](src/routes/_auth/app/settings.tsx))
-- ✅ **Tests + CI** — Vitest via `vp test`, GitHub Actions running check/test/build on every push ([ci.yml](.github/workflows/ci.yml))
+- ✅ **Tests + CI** — Vitest via `vp test`, GitHub Actions running check/test/build on pushes to `main` and all PRs ([ci.yml](.github/workflows/ci.yml))
 - 🤖 **AI-agent ready** — [AGENTS.md](AGENTS.md) + [CLAUDE.md](CLAUDE.md) + topic guides in [.agents/](.agents/) so coding agents follow the house patterns and design system
 
 ## Getting Started

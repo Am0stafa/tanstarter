@@ -45,14 +45,16 @@ describe("queryCustomers", () => {
     expect(values).toEqual([...values].sort((a, b) => a - b));
   });
 
-  it("clamps out-of-range pages to the last page instead of returning nothing", () => {
+  it("clamps out-of-range pages to the last page and reports the effective page", () => {
     const result = queryCustomers({ ...defaults, page: 999 });
     expect(result.rows.length).toBeGreaterThan(0);
     expect(result.pageCount).toBe(Math.ceil(customers.length / CUSTOMERS_PAGE_SIZE));
+    // The UI paginates from this value, so it must be the clamped page, not 999.
+    expect(result.page).toBe(result.pageCount);
   });
 
   it("reports an empty result set with pageCount 1", () => {
     const result = queryCustomers({ ...defaults, q: "zzz-no-such-customer" });
-    expect(result).toEqual({ rows: [], total: 0, pageCount: 1 });
+    expect(result).toEqual({ rows: [], total: 0, pageCount: 1, page: 1 });
   });
 });

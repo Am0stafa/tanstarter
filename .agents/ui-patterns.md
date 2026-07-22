@@ -85,4 +85,6 @@ Use `ChartContainer` + `ChartTooltip` from [src/components/ui/chart.tsx](../src/
 
 ## Demo data
 
-`src/lib/demo/` is a deterministic in-memory stand-in for a real table, so the starter runs without migrations. When building your product's first real feature, copy its shape — schema → server fn (`.validator(zodSchema)`) → `queryOptions` → route loader — but back it with Drizzle, then delete the demo module and its routes.
+`src/lib/demo/` is a deterministic in-memory stand-in for a real table, so the starter runs without migrations. When building your product's first real feature, copy its shape — schema → server fn (`.middleware([authMiddleware]).validator(zodSchema)`) → `queryOptions` → route loader — but back it with Drizzle, then delete the demo module and its routes.
+
+**Server functions are public HTTP endpoints.** Route-level guards (`_auth`) only protect navigation — every server fn that returns non-public data must carry `authMiddleware` (or `freshAuthMiddleware` for sensitive mutations) itself, as `$getCustomers` does. See [.agents/auth.md](auth.md).

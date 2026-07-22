@@ -17,6 +17,8 @@ Every screen, component, and page in this app follows the **Supabase design lang
 5. **Flat, bordered surfaces.** Prefer `border border-border` + `bg-card` over heavy shadows. Shadows (`shadow-xs`…`shadow-lg`) are subtle by design in this theme — use them for elevation (popovers, dialogs), not decoration.
 6. **Radius comes from the scale.** Use `rounded-sm/md/lg/xl` (derived from `--radius: 0.5rem`). Never arbitrary values like `rounded-[13px]`.
 
+Scope note: these rules govern first-party code. Vendored registry files in `components/ui/` may carry upstream quirks (e.g. `bg-black/30` dialog overlays) — leave them as generated so they stay diffable against the registry, but never copy those patterns into app code.
+
 ## Layout & typography
 
 - **Density over whitespace**: Supabase-style apps are information-dense dashboards. Default to compact paddings (`p-4`/`p-6` cards, `gap-2`/`gap-4` stacks), 13–14px body text (`text-sm`), and full-width content areas with a fixed sidebar.

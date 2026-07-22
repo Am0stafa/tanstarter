@@ -74,7 +74,7 @@ function DashboardPage() {
           delta={stats.newDelta}
         />
         <StatCard label="Active subscriptions" value={String(stats.active)} />
-        <StatCard label="Churn rate" value={formatDelta(stats.churnRate).slice(1)} invertDelta />
+        <StatCard label="Churn rate" value={`${stats.churnRate.toFixed(1)}%`} />
       </div>
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
@@ -139,16 +139,14 @@ function StatCard({
   label,
   value,
   delta,
-  invertDelta = false,
 }: {
   label: string;
   value: string;
   /** Percentage change vs previous month; omitted → no trend badge. */
   delta?: number;
-  /** For metrics where down is good (e.g. churn). */
-  invertDelta?: boolean;
 }) {
-  const isPositive = delta !== undefined && (invertDelta ? delta < 0 : delta > 0);
+  // A flat month reads as steady (up icon), not as a decline.
+  const isPositive = delta !== undefined && delta >= 0;
 
   return (
     <Card className="gap-2">

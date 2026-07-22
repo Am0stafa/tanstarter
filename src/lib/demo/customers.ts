@@ -56,6 +56,8 @@ export interface CustomerQueryResult {
   rows: Customer[];
   total: number;
   pageCount: number;
+  /** Effective (clamped) page — may differ from the requested page. */
+  page: number;
 }
 
 /**
@@ -89,6 +91,7 @@ export function queryCustomers(search: CustomerSearch, data: Customer[] = custom
     rows: sorted.slice(start, start + CUSTOMERS_PAGE_SIZE),
     total: sorted.length,
     pageCount,
+    page,
   } satisfies CustomerQueryResult;
 }
 

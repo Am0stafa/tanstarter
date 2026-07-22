@@ -11,7 +11,7 @@ import {
   MoreHorizontalIcon,
   XIcon,
 } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import { DataTable } from "#/components/data-table";
@@ -94,6 +94,7 @@ function CustomersPage() {
       <Button
         variant="ghost"
         size="sm"
+        aria-label={`Sort by ${label}${isSorted ? `, currently ${search.order === "asc" ? "ascending" : "descending"}` : ""}`}
         className="-ml-2 h-7 gap-1 text-xs font-medium text-muted-foreground"
         onClick={() =>
           updateSearch({
@@ -196,7 +197,7 @@ function CustomersPage() {
             value={search.plan}
             onValueChange={(plan) => updateSearch({ plan: plan ?? "all" })}
           >
-            <SelectTrigger size="sm" className="w-36">
+            <SelectTrigger size="sm" className="w-36" aria-label="Filter by plan">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -212,7 +213,7 @@ function CustomersPage() {
             value={search.status}
             onValueChange={(status) => updateSearch({ status: status ?? "all" })}
           >
-            <SelectTrigger size="sm" className="w-36">
+            <SelectTrigger size="sm" className="w-36" aria-label="Filter by status">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -243,15 +244,17 @@ function CustomersPage() {
 
         <div className="flex items-center justify-between">
           <p className="text-sm text-muted-foreground">
-            Page {Math.min(search.page, data.pageCount)} of {data.pageCount}
+            Page {data.page} of {data.pageCount}
           </p>
+          {/* data.page (the server-clamped page), never the raw URL value —
+              an out-of-range ?page=99 would otherwise strand these buttons */}
           <div className="flex gap-2">
             <Button
               variant="outline"
               size="icon-sm"
               aria-label="Previous page"
-              disabled={search.page <= 1}
-              onClick={() => updateSearch({ page: search.page - 1 })}
+              disabled={data.page <= 1}
+              onClick={() => updateSearch({ page: data.page - 1 })}
             >
               <ChevronLeftIcon />
             </Button>
@@ -259,8 +262,8 @@ function CustomersPage() {
               variant="outline"
               size="icon-sm"
               aria-label="Next page"
-              disabled={search.page >= data.pageCount}
-              onClick={() => updateSearch({ page: search.page + 1 })}
+              disabled={data.page >= data.pageCount}
+              onClick={() => updateSearch({ page: data.page + 1 })}
             >
               <ChevronRightIcon />
             </Button>
@@ -272,9 +275,16 @@ function CustomersPage() {
 }
 
 /**
- * Uncontrolled-feeling search box that pushes to the URL after a 300ms pause,
- * so typing doesn't spam history or refetch per keystroke. Resyncs when the
- * URL changes from elsewhere (Reset button, back/forward).
+ * Search box that pushes to the URL after a 300ms pause, so typing doesn't
+ * spam history or refetch per keystroke.
+ *
+ * Two subtleties, both reviewer-found bugs in the naive version:
+ * - Echo detection: our own push comes back as a `value` prop change (the
+ *   schema trims what we send), which must NOT clobber in-progress typing —
+ *   only genuinely external changes (Reset, back/forward) adopt the URL value.
+ * - The debounce lives in an effect keyed on `draft`, so its cleanup cancels
+ *   any pending push whenever the draft changes again, is externally reset,
+ *   or the component unmounts. No stale timer can fire.
  */
 function DebouncedSearchInput({
   value,
@@ -285,28 +295,29 @@ function DebouncedSearchInput({
 }) {
   const [draft, setDraft] = useState(value);
   const [lastSyncedValue, setLastSyncedValue] = useState(value);
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Derive-during-render resync (https://react.dev/learn/you-might-not-need-an-effect):
-  // when the URL value changes from elsewhere (Reset, back/forward), adopt it.
+  // Derive-during-render resync (https://react.dev/learn/you-might-not-need-an-effect).
+  // `value === draft.trim()` means the change is the echo of our own push.
   if (lastSyncedValue !== value) {
     setLastSyncedValue(value);
-    setDraft(value);
+    if (value !== draft.trim()) {
+      setDraft(value);
+    }
   }
 
-  useEffect(() => () => clearTimeout(timerRef.current ?? undefined), []);
+  useEffect(() => {
+    if (draft.trim() === value) return;
+    const timer = setTimeout(() => onDebouncedChange(draft), 300);
+    return () => clearTimeout(timer);
+  }, [draft, value, onDebouncedChange]);
 
   return (
     <Input
       value={draft}
       placeholder="Search name or email..."
+      aria-label="Search customers by name or email"
       className="h-7 w-56 text-sm"
-      onChange={(event) => {
-        const next = event.target.value;
-        setDraft(next);
-        if (timerRef.current) clearTimeout(timerRef.current);
-        timerRef.current = setTimeout(() => onDebouncedChange(next), 300);
-      }}
+      onChange={(event) => setDraft(event.target.value)}
     />
   );
 }
@@ -323,8 +334,13 @@ function CustomerRowActions({ customer }: { customer: Customer }) {
         <DropdownMenuContent align="end">
           <DropdownMenuItem
             onClick={async () => {
-              await navigator.clipboard.writeText(customer.email);
-              toast.success("Email copied to clipboard");
+              try {
+                await navigator.clipboard.writeText(customer.email);
+                toast.success("Email copied to clipboard");
+              } catch {
+                // Clipboard can be blocked (permissions policy, non-secure context)
+                toast.error("Couldn't access the clipboard", { description: customer.email });
+              }
             }}
           >
             <CopyIcon />

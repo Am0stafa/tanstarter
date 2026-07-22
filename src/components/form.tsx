@@ -26,7 +26,11 @@ import { Textarea } from "#/components/ui/textarea";
  */
 const { fieldContext, formContext, useFieldContext, useFormContext } = createFormHookContexts();
 
-/** Shared label + description + first-error scaffolding around a control. */
+/**
+ * Shared label + description + first-error scaffolding around a control.
+ * Exposes stable ids (`<name>-description` / `<name>-error`) so controls can
+ * point aria-describedby at whichever message is currently shown.
+ */
 function FieldShell({
   label,
   description,
@@ -44,14 +48,25 @@ function FieldShell({
     <div className="grid gap-2">
       <Label htmlFor={htmlFor}>{label}</Label>
       {children}
-      {description && !error && <p className="text-sm text-muted-foreground">{description}</p>}
+      {description && !error && (
+        <p id={`${htmlFor}-description`} className="text-sm text-muted-foreground">
+          {description}
+        </p>
+      )}
       {error && (
-        <p role="alert" className="text-sm text-destructive">
+        <p id={`${htmlFor}-error`} role="alert" className="text-sm text-destructive">
           {error}
         </p>
       )}
     </div>
   );
+}
+
+/** aria-describedby target for the currently visible message, if any. */
+function describedBy(name: string, error: string | undefined, description: string | undefined) {
+  if (error) return `${name}-error`;
+  if (description) return `${name}-description`;
+  return undefined;
 }
 
 /** First validation error for a touched field, as display text. */
@@ -85,6 +100,7 @@ function TextField({
         onBlur={field.handleBlur}
         onChange={(event) => field.handleChange(event.target.value)}
         aria-invalid={Boolean(error)}
+        aria-describedby={describedBy(field.name, error, description)}
         {...inputProps}
       />
     </FieldShell>
@@ -111,6 +127,7 @@ function TextareaField({
         onBlur={field.handleBlur}
         onChange={(event) => field.handleChange(event.target.value)}
         aria-invalid={Boolean(error)}
+        aria-describedby={describedBy(field.name, error, description)}
         {...textareaProps}
       />
     </FieldShell>
@@ -119,19 +136,33 @@ function TextareaField({
 
 function SwitchField({ label, description }: { label: string; description?: string }) {
   const field = useFieldContext<boolean>();
+  const error = fieldError(field.state.meta);
 
   return (
-    <div className="flex items-center justify-between gap-4 rounded-lg border p-4">
-      <div className="grid gap-0.5">
-        <Label htmlFor={field.name}>{label}</Label>
-        {description && <p className="text-sm text-muted-foreground">{description}</p>}
+    <div className="grid gap-2">
+      <div className="flex items-center justify-between gap-4 rounded-lg border p-4">
+        <div className="grid gap-0.5">
+          <Label htmlFor={field.name}>{label}</Label>
+          {description && (
+            <p id={`${field.name}-description`} className="text-sm text-muted-foreground">
+              {description}
+            </p>
+          )}
+        </div>
+        <Switch
+          id={field.name}
+          name={field.name}
+          checked={field.state.value}
+          onCheckedChange={(checked) => field.handleChange(checked)}
+          aria-invalid={Boolean(error)}
+          aria-describedby={describedBy(field.name, error, description)}
+        />
       </div>
-      <Switch
-        id={field.name}
-        name={field.name}
-        checked={field.state.value}
-        onCheckedChange={(checked) => field.handleChange(checked)}
-      />
+      {error && (
+        <p id={`${field.name}-error`} role="alert" className="text-sm text-destructive">
+          {error}
+        </p>
+      )}
     </div>
   );
 }
