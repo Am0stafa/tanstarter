@@ -11,7 +11,11 @@ Don't build after every change. If lint passes; assume changes work.
 
 ## Testing
 
-Vitest hasn't been set up yet. Prefer lint checks for now.
+Vitest runs via `vpr test` (config in the `test` block of `vite.config.ts`; test files are `src/**/*.test.ts`).
+
+- Import test APIs from `vite-plus/test`, NOT `vitest` (Vite+ re-exports vitest and the `vitest` package is not installed): `import { describe, expect, it } from "vite-plus/test"`
+- Test pure logic (schemas, query/filter functions, formatters) — see `src/lib/demo/customers.test.ts`. Keep components thin enough that their logic is testable this way.
+- CI runs check + test + build on every push/PR (`.github/workflows/ci.yml`).
 
 ## Formatting
 

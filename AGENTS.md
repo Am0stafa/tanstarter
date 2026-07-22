@@ -12,6 +12,7 @@
 ## Topic-specific Guidelines
 
 - [UI design system](.agents/design.md) - Supabase-style theme, design tokens, component & styling rules
+- [UI patterns](.agents/ui-patterns.md) - Recipes: forms (TanStack Form + Zod), data tables, charts, URL search-param state, command palette
 - [TanStack patterns](.agents/tanstack-patterns.md) - Routing, data fetching, loaders, server functions, environment shaking
 - [Auth patterns](.agents/auth.md) - Route guards, middleware, auth utilities
 - [TypeScript conventions](.agents/typescript.md) - Casting rules, prefer type inference

@@ -1,53 +1,56 @@
-# [TanStarter](https://github.com/mugnavo/tanstarter)
+# TanStarter — batteries-included
 
 > [!IMPORTANT]
-> This template now requires [Vite+ `vp`](https://viteplus.dev/guide/#install-vp) to be installed, and uses [pnpm](https://pnpm.io/installation) by default.
+> This template requires [Vite+ `vp`](https://viteplus.dev/guide/#install-vp) to be installed, and uses [pnpm](https://pnpm.io/installation) by default.
 
-<!-- scaffold:description -->
+A batteries-included, AI-agent-friendly starter for building products on 🏝️ TanStack Start — forked from the excellent [mugnavo/tanstarter](https://github.com/mugnavo/tanstarter) and extended with a full Supabase-style design system, dashboard shell, and wired-up patterns for forms, tables, charts, and URL state.
 
-A minimal starter template for 🏝️ TanStack Start. [→ Preview here](https://tanstarter.mugnavo.com/)
+## What's inside
 
-```bash
-pnpm create mugnavo
-```
+**Core stack** (from upstream):
 
 - [React 19](https://react.dev) + [React Compiler](https://react.dev/learn/react-compiler)
 - TanStack [Start](https://tanstack.com/start/latest) + [Router](https://tanstack.com/router/latest) + [Query](https://tanstack.com/query/latest)
-- [Tailwind CSS](https://tailwindcss.com/) + [shadcn/ui](https://ui.shadcn.com/) + [Base UI](https://base-ui.com/) (base-rhea, [`--preset b1au68YWO`](https://ui.shadcn.com/create?preset=b1au68YWO&base=base&template=start&pointer=true))
-- [Vite 8](https://vite.dev) + [Nitro v3](https://nitro.build/)
-- [Drizzle ORM](https://orm.drizzle.team/) + PostgreSQL
-- [Better Auth](https://better-auth.com/)
-- [Vite Plus](https://viteplus.dev/) + [Oxlint](https://oxc.rs/docs/guide/usage/linter.html) + [Oxfmt](https://oxc.rs/docs/guide/usage/formatter.html)
+- [Tailwind CSS](https://tailwindcss.com/) v4 + [shadcn/ui](https://ui.shadcn.com/) on [Base UI](https://base-ui.com/) (base-rhea)
+- [Drizzle ORM](https://orm.drizzle.team/) + PostgreSQL, [Better Auth](https://better-auth.com/) (email + GitHub/Google OAuth)
+- [Vite 8](https://vite.dev) + [Nitro v3](https://nitro.build/) + [Vite+](https://viteplus.dev/) (Oxlint, Oxfmt, Vitest)
 
-> [!TIP]
-> This template is also available as a monorepo, powered by Vite+ and pnpm workspaces. See [mugnavo/tanstarter-monorepo](https://github.com/mugnavo/tanstarter-monorepo).
+**Batteries added by this fork:**
+
+- 🎨 **Supabase-style design system** — [tweakcn](https://tweakcn.com) Supabase theme applied as design tokens, enforced by [.agents/design.md](.agents/design.md); light + dark mode
+- 🧭 **App shell** — collapsible icon sidebar, breadcrumb header, user menu ([/app](src/routes/_auth/app/route.tsx))
+- ⌘K **Command palette** — global navigation + theme switching via cmdk ([command-menu.tsx](src/components/command-menu.tsx))
+- 📊 **Charts** — Recharts through shadcn chart primitives, themed via `--chart-*` tokens ([dashboard](src/routes/_auth/app/index.tsx))
+- 📋 **Data tables** — TanStack Table, server-driven filter/sort/pagination with state in the URL ([customers](src/routes/_auth/app/customers.tsx))
+- 🔗 **Type-safe URL state** — zod-validated search params with graceful fallbacks (`validateSearch` + `stripSearchParams`)
+- 📝 **Forms** — TanStack Form + Zod with a reusable shadcn field kit ([form.tsx](src/components/form.tsx), [settings](src/routes/_auth/app/settings.tsx))
+- ✅ **Tests + CI** — Vitest via `vp test`, GitHub Actions running check/test/build on every push ([ci.yml](.github/workflows/ci.yml))
+- 🤖 **AI-agent ready** — [AGENTS.md](AGENTS.md) + [CLAUDE.md](CLAUDE.md) + topic guides in [.agents/](.agents/) so coding agents follow the house patterns and design system
 
 ## Getting Started
 
-#### Prerequisites
+Prerequisites: [Node.js](https://nodejs.org/en/download) >= 24, [pnpm](https://pnpm.io/installation) >= 11, [Vite+](https://viteplus.dev/guide/#install-vp) (`vp`), and Docker (for the local database).
 
-- [Node.js](https://nodejs.org/en/download) >= 24
-- [pnpm](https://pnpm.io/installation) >= 11
-- [Vite Plus](https://viteplus.dev/guide/#install-vp) (`vp`)
-
-#### Setup
-
-1. [Use this template](https://github.com/new?template_name=tanstarter&template_owner=mugnavo) or create a project using our CLI:
+1. Clone and install:
 
    ```bash
-   pnpm create mugnavo
+   git clone https://github.com/Am0stafa/tanstarter.git my-product
+   cd my-product && vp install
    ```
 
-2. Create a `.env` file based on [`.env.example`](./.env.example).
+2. Create a `.env` file based on [`.env.example`](./.env.example), and start the local database:
 
-3. Generate the initial migration with drizzle-kit, then apply to your database:
+   ```bash
+   docker compose up -d      # local PostgreSQL
+   vpr auth:secret           # generates BETTER_AUTH_SECRET
+   ```
+
+3. Generate and apply the initial migration:
 
    ```sh
    vpr db generate
    vpr db migrate
    ```
-
-   https://orm.drizzle.team/docs/migrations
 
 4. Run the development server:
 
@@ -55,15 +58,20 @@ pnpm create mugnavo
    vpr dev
    ```
 
-   The development server should now be running at [http://localhost:3000](http://localhost:3000).
+   Sign up at [http://localhost:3000](http://localhost:3000) and you land in the dashboard shell with the demo pages (dashboard, customers, settings). Build your product by replacing the demo pages — the patterns to copy are documented in [.agents/ui-patterns.md](.agents/ui-patterns.md).
+
+## Working with AI agents
+
+This repo is structured so coding agents (Claude Code, Cursor, Copilot, ...) produce consistent results:
+
+- [AGENTS.md](AGENTS.md) is the entry point (with [CLAUDE.md](CLAUDE.md) pointing at it) — stack essentials plus an index of topic guides.
+- [.agents/design.md](.agents/design.md) enforces the Supabase-style design system: semantic tokens only, both color modes, green as accent. Agents read it before any UI work.
+- [.agents/ui-patterns.md](.agents/ui-patterns.md) holds copy-paste recipes for forms, tables, charts, URL state, and the command palette, each pointing at a working reference page in `src/routes/_auth/app/`.
+- Validation is one command (`vpr check`), tests are `vpr test`, and CI repeats both — so agent output gets verified the same way everywhere.
 
 ## Deploying to production
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/66acdee6-8e42-436f-9943-a67cad998f63/deploy-status)](https://app.netlify.com/projects/mugnavo-tanstarter/deploys)
-
-The [vite config](./vite.config.ts#L130-L131) is configured to use Nitro by default, which supports many [deployment presets](https://nitro.build/deploy) like Netlify, Vercel, Node.js, and more.
-
-Refer to the [TanStack Start hosting docs](https://tanstack.com/start/latest/docs/framework/react/guide/hosting) for more information.
+The [vite config](./vite.config.ts) uses Nitro, which supports many [deployment presets](https://nitro.build/deploy) (Netlify, Vercel, Node.js, and more). Refer to the [TanStack Start hosting docs](https://tanstack.com/start/latest/docs/framework/react/guide/hosting) for details.
 
 ## Issue watchlist
 
@@ -76,36 +84,30 @@ Refer to the [TanStack Start hosting docs](https://tanstack.com/start/latest/doc
 
 ## Goodies
 
-#### Upgrading dependencies
-
-Dependency versions are pinned, so they may be slightly outdated when you create your project. To selectively upgrade packages, run `vpr deps` or `vpx taze@latest -Ilw --maturity-period 3`.
-
 #### Scripts
 
 Check [package.json](./package.json) for the full list of available scripts.
 
 - **`auth:generate`** - Regenerate the [auth db schema](./src/lib/db/schema/auth.schema.ts) if you've made changes to your Better Auth [config](./src/lib/auth/auth.ts).
 - **`db`** - Run [drizzle-kit](https://orm.drizzle.team/docs/kit-overview) commands. (e.g. `vpr db generate`, `vpr db studio`)
-- **`ui`** - The shadcn/ui CLI. (e.g. `vpr ui add button`)
+- **`ui`** - The shadcn/ui CLI. (e.g. `vpr ui add data-table`)
+- **`test`** - Run Vitest (`src/**/*.test.ts`; import from `vite-plus/test`).
 - **`format`**, **`lint`** - Run Oxfmt and Oxlint, or both via `vpr check`.
-- **`deps`** - Selectively upgrade dependencies via taze.
+- **`deps`** - Selectively upgrade dependencies via taze (versions are pinned).
 
 #### Utilities
 
-- [`auth/middleware.ts`](./src/lib/auth/middleware.ts) - Sample middleware for enforcing authentication on server functions & API routes.
-- [`theme-toggle.tsx`](./src/components/theme-toggle.tsx), [`theme-provider.tsx`](./src/components/theme-provider.tsx) - A theme toggle and provider for toggling between light and dark mode.
+- [`auth/middleware.ts`](./src/lib/auth/middleware.ts) - Middleware for enforcing authentication on server functions & API routes.
+- [`theme-toggle.tsx`](./src/components/theme-toggle.tsx), [`theme-provider.tsx`](./src/components/theme-provider.tsx) - Light/dark/system theme, FOUC-safe.
+- [`format.ts`](./src/lib/format.ts) - Shared currency/number/date formatters used by tables, charts, and stat cards.
 
 ## License
 
-Code in this template is public domain via [Unlicense](./LICENSE). Feel free to remove or replace for your own project.
+Code in this template is public domain via [Unlicense](./LICENSE), same as the upstream template. Feel free to remove or replace for your own project.
 
-## Ecosystem
+## Upstream & ecosystem
 
+- [mugnavo/tanstarter](https://github.com/mugnavo/tanstarter) - The upstream minimal template this fork builds on (also available as a [monorepo](https://github.com/mugnavo/tanstarter-monorepo)).
 - [@tanstack/intent](https://tanstack.com/intent/latest/docs/getting-started/quick-start-consumers) - Up-to-date skills for your AI agents, auto-synchronized from your installed dependencies.
 - [awesome-tanstack-start](https://github.com/Balastrong/awesome-tanstack-start) - A curated list of awesome resources for TanStack Start.
-- [shadcn/ui Directory](https://ui.shadcn.com/docs/directory), [shoogle.dev](https://shoogle.dev/) - Component directories & registries for shadcn/ui.
-
-## Related templates
-
-- [mugnavo/tanstarter-monorepo](https://github.com/mugnavo/tanstarter-monorepo) - A minimal monorepo version of this template, powered by Vite+ and pnpm workspaces.
-- [tsu-moe/tsu-stack](https://github.com/tsu-moe/tsu-stack) - An opinionated and batteries-included monorepo template from Luzefiru, built on tanstarter-monorepo, with Paraglide.js (i18n), Hono, oRPC, and more.
+- [shadcn/ui Directory](https://ui.shadcn.com/docs/directory), [shoogle.dev](https://shoogle.dev/), [Evil Charts](https://evilcharts.com) - Component directories & registries for shadcn/ui.
